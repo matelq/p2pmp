@@ -2,25 +2,23 @@ package main
 
 import (
 	"context"
+	"firewallBypass/shared"
 	"fmt"
+	"github.com/hashicorp/yamux"
+	"google.golang.org/grpc"
 	"log"
 	"net"
 	"time"
-
-	"github.com/hashicorp/yamux"
-	"github.com/matelq/p2pmp/examples/yamux/common"
-
-	"google.golang.org/grpc"
 )
 
-type myP2PManagerServer struct {
-	common.UnimplementedP2PManagerServer
+type MyClientServer struct {
+	shared.UnimplementedClientServerServer
 }
 
-func (s myP2PManagerServer) SendMessage(context context.Context, message *common.Message) (*common.Echo, error) {
-	log.Printf("SendMessage called: %s", message.Text)
+func (s MyClientServer) SendMessageClient(context context.Context, message *shared.MessageClient) (*shared.EchoClient, error) {
+	log.Printf("SendMessageClient called: %s", message.Text)
 
-	return &common.Echo{
+	return &shared.EchoClient{
 		Text: fmt.Sprintf("Echo: %s", message.Text),
 	}, nil
 }
@@ -39,8 +37,8 @@ func main() {
 	}
 
 	server := grpc.NewServer()
-	service := &myP2PManagerServer{}
-	common.RegisterP2PManagerServer(server, service)
+	service := &MyClientServer{}
+	shared.RegisterClientServerServer(server, service)
 
 	log.Println("launching gRPC server over TCP connection...")
 
