@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package shared.core;
+
+option go_package = "github.com/matelq/p2pmp/examples/firewallBypass/shared";
+
+service coreServer {
+  rpc SendMessageToCore(MessageCore) returns(EchoCore) {}
+  rpc RegisterMe(RegisterRequest) returns (RegisterResponse) {}
+}
+
+message RegisterResponse {
+  int32 clientId = 1;
+  // Пока без jwt, он понадобится для будущей валидации
+  string jwtToken = 2;
+}
+
+message RegisterRequest {
+  // Сюда возможно что-то надо запихнуть, пока просто затычка
+}
+
+message MessageCore {
+  string text = 1;
+}
+
+message EchoCore {
+  string text = 1;
+}

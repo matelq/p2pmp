@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package shared.client;
+
+option go_package = "github.com/matelq/p2pmp/examples/firewallBypass/shared";
+
+service clientServer {
+  rpc SendMessageToClient(MessageClient) returns(EchoClient) {}
+}
+
+message MessageClient {
+  string text = 1;
+}
+
+message EchoClient {
+  string text = 1;
+}
